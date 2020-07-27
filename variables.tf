@@ -3,6 +3,11 @@ variable "prefix" {
   default     = "arch-hashi-f5-demo"
 }
 
+variable "uk_se_name" {
+  description = "SE name for resources created"
+  default     = "arch"
+}
+
 variable "ssh_key_name" {
   description = "prefix for resources created"
   default     = "arch_id_rsa"
