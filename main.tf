@@ -104,10 +104,40 @@ resource "aws_eip" "f5-public" {
   associate_with_private_ip = "10.0.1.10"
 }
 
+data "aws_ami" "f5_ami" {
+  most_recent = true
+  owners      = ["679593333241"]
+
+  filter {
+    name   = "name"
+    values = [var.f5_ami_search_name]
+  }
+}
+# ONBOARDING TEMPLATE  ---------
+
+data "template_file" "f5_init" {
+  template = file("./f5_onboard.tmpl")
+
+  vars = {
+    password              = random_string.password.result
+    doVersion             = "latest"
+    #example version:
+    #as3Version           = "3.16.0"
+    as3Version            = "latest"
+    tsVersion             = "latest"
+    cfVersion             = "latest"
+    fastVersion           = "latest"
+    libs_dir              = var.libs_dir
+    onboard_log           = var.onboard_log
+    projectPrefix         = var.prefix
+  }
+}
+
 resource "aws_instance" "big-ip" {
-  ami           = "ami-0fe284d68b7936ab6"
+  ami           = data.aws_ami.f5_ami.id
   instance_type = "m5.xlarge"
   key_name      = var.ssh_key_name
+  user_data = data.template_file.f5-1_init.rendered
 
   network_interface {
     network_interface_id = aws_network_interface.f5-mgmt.id
@@ -121,6 +151,8 @@ resource "aws_instance" "big-ip" {
 
   tags = {
     Name = "${var.prefix}-f5"
+    Env   = "consul"
+    UK-SE = var.uk_se_name
   }
 }
 
