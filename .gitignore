@@ -4,6 +4,8 @@
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*creds*
+*password*
 
 # Crash log files
 crash.log
