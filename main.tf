@@ -115,6 +115,11 @@ data "aws_ami" "f5_ami" {
 }
 # ONBOARDING TEMPLATE  ---------
 
+resource "random_string" "password" {
+  length  = 10
+  special = false
+}
+
 data "template_file" "f5_init" {
   template = file("./f5_onboard.tmpl")
 
@@ -137,7 +142,7 @@ resource "aws_instance" "big-ip" {
   ami           = data.aws_ami.f5_ami.id
   instance_type = "m5.xlarge"
   key_name      = var.ssh_key_name
-  user_data = data.template_file.f5-1_init.rendered
+  user_data = data.template_file.f5_init.rendered
 
   network_interface {
     network_interface_id = aws_network_interface.f5-mgmt.id
