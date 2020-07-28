@@ -165,6 +165,10 @@ resource "aws_instance" "big-ip" {
   }
 }
 
+output "f5_user" {
+  value = var.username
+}
+
 output "f5_password" {
   value = random_string.password.result
 }
