@@ -14,7 +14,7 @@ module "vpc" {
   azs             = ["eu-west-2a"]
   public_subnets  = ["10.0.0.0/24", "10.0.1.0/24"]
 
-  enable_nat_gateway = false
+  enable_nat_gateway = true
 
   tags = {
     Name = "arch-vpc-terraform"
@@ -154,6 +154,10 @@ resource "aws_instance" "big-ip" {
     device_index         = 1
   }
 
+  provisioner "local-exec" {
+    command = "while [[ \"$(curl -skiu ${var.username}:${random_string.password.result} https://${self.public_ip}:${var.port}/mgmt/shared/appsvcs/declare | grep -Eoh \"^HTTP/1.1 204\")\" != \"HTTP/1.1 204\" ]]; do sleep 5; done"
+  }
+  
   tags = {
     Name = "${var.prefix}-f5"
     Env   = "consul"
