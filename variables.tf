@@ -8,6 +8,11 @@ variable "uk_se_name" {
   default     = "arch"
 }
 
+variable "username" {
+  description = "username for bigip"
+  default     = "admin"
+}
+
 variable "ssh_key_name" {
   description = "prefix for resources created"
   default     = "arch_id_rsa"

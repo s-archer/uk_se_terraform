@@ -155,9 +155,9 @@ resource "aws_instance" "big-ip" {
   }
 
   provisioner "local-exec" {
-    command = "while [[ \"$(curl -skiu ${var.username}:${random_string.password.result} https://${self.public_ip}:${var.port}/mgmt/shared/appsvcs/declare | grep -Eoh \"^HTTP/1.1 204\")\" != \"HTTP/1.1 204\" ]]; do sleep 5; done"
+    command = "while [[ \"$(curl -skiu ${var.username}:${random_string.password.result} https://${self.public_ip}/mgmt/shared/appsvcs/declare | grep -Eoh \"^HTTP/1.1 204\")\" != \"HTTP/1.1 204\" ]]; do sleep 5; done"
   }
-  
+
   tags = {
     Name = "${var.prefix}-f5"
     Env   = "consul"
