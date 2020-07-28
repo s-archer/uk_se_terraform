@@ -90,7 +90,7 @@ resource "aws_eip" "f5-mgmt" {
 
 resource "aws_network_interface" "f5-public" {
   subnet_id   = module.vpc.public_subnets[1]
-  private_ips = ["10.0.1.10"]
+  private_ips = ["10.0.1.10", "10.0.1.100"]
   security_groups = [ aws_security_group.f5.id ]
 
   tags = {
